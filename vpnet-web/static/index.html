@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPNet - 虚拟局域网管理</title>
+    <meta name="description" content="高性能去中心化虚拟局域网管理平台">
+    <meta name="keywords" content="VPNet,虚拟局域网,去中心化,组网">
+    
+    <!-- 引入外部库 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- 引入自定义CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- 主题切换 -->
+    <div class="theme-toggle">
+        <button id="theme-toggle" class="theme-btn" aria-label="切换主题">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+        </button>
+    </div>
+    
+    <!-- 侧边栏 -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1 class="logo">
+                <i class="fas fa-network-wired"></i>
+                <span>VPNet</span>
+            </h1>
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="切换侧边栏">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link active">
+                        <i class="fas fa-chart-line"></i>
+                        <span>仪表盘</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#nodes" class="nav-link">
+                        <i class="fas fa-server"></i>
+                        <span>节点管理</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#devices" class="nav-link">
+                        <i class="fas fa-laptop"></i>
+                        <span>设备管理</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#routes" class="nav-link">
+                        <i class="fas fa-route"></i>
+                        <span>路由管理</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#auth" class="nav-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>认证管理</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#settings" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span>系统设置</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#logs" class="nav-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span>日志管理</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-details">
+                    <span class="user-name">管理员</span>
+                    <span class="user-role">系统管理员</span>
+                </div>
+            </div>
+            <button class="logout-btn" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>退出登录</span>
+            </button>
+        </div>
+    </aside>
+    
+    <!-- 主内容区 -->
+    <main class="main-content" id="main-content">
+        <!-- 顶部导航 -->
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="mobile-sidebar-toggle" id="mobile-sidebar-toggle" aria-label="切换侧边栏">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="breadcrumb">
+                    <a href="#dashboard">首页</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span>仪表盘</span>
+                </div>
+            </div>
+            
+            <div class="nav-right">
+                <div class="nav-item">
+                    <button class="nav-btn" aria-label="通知">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                </div>
+                <div class="nav-item">
+                    <button class="nav-btn" aria-label="消息">
+                        <i class="fas fa-envelope"></i>
+                        <span class="badge">5</span>
+                    </button>
+                </div>
+                <div class="nav-item">
+                    <button class="nav-btn" aria-label="刷新">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <!-- 仪表盘 -->
+            <section id="dashboard" class="section active">
+                <h2 class="section-title">仪表盘</h2>
+                <p class="section-subtitle">系统实时状态监控</p>
+                
+                <!-- 统计卡片 -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-primary">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value" id="total-nodes">0</h3>
+                            <p class="stat-label">在线节点</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon bg-success">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value" id="total-devices">0</h3>
+                            <p class="stat-label">设备数量</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon bg-warning">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value" id="total-routes">0</h3>
+                            <p class="stat-label">路由数量</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon bg-info">
+                            <i class="fas fa-traffic-light"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-value" id="total-traffic">0.00 MB</h3>
+                            <p class="stat-label">总流量</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 图表区域 -->
+                <div class="charts-grid">
+                    <!-- 网络流量图表 -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">网络流量</h3>
+                            <div class="chart-controls">
+                                <button class="chart-btn active">实时</button>
+                                <button class="chart-btn">1小时</button>
+                                <button class="chart-btn">24小时</button>
+                                <button class="chart-btn">7天</button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="chart-placeholder">
+                                <i class="fas fa-chart-line"></i>
+                                <p>网络流量图表</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 节点状态图表 -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">节点状态</h3>
+                            <div class="chart-controls">
+                                <button class="chart-btn active">在线</button>
+                                <button class="chart-btn">离线</button>
+                                <button class="chart-btn">全部</button>
+                            </div>
+                        </div>
+                        <div class="chart-body">
+                            <div class="chart-placeholder">
+                                <i class="fas fa-pie-chart"></i>
+                                <p>节点状态图表</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 最近活动 -->
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <h3 class="activity-title">最近活动</h3>
+                        <a href="#logs" class="activity-link">查看全部</a>
+                    </div>
+                    <div class="activity-body">
+                        <div class="activity-list">
+                            <!-- 活动项 -->
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-server"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="activity-text">节点 <strong>node-001</strong> 上线</p>
+                                    <span class="activity-time">2分钟前</span>
+                                </div>
+                            </div>
+                            <!-- 更多活动项 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 节点管理 -->
+            <section id="nodes" class="section">
+                <h2 class="section-title">节点管理</h2>
+                <p class="section-subtitle">管理所有VPNet节点</p>
+                
+                <!-- 节点列表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">节点列表</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" id="add-node">
+                                <i class="fas fa-plus"></i>
+                                添加节点
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-sync-alt"></i>
+                                刷新
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>名称</th>
+                                        <th>状态</th>
+                                        <th>虚拟IP</th>
+                                        <th>物理IP</th>
+                                        <th>在线时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="nodes-table-body">
+                                    <!-- 节点数据将通过JavaScript动态加载 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 设备管理 -->
+            <section id="devices" class="section">
+                <h2 class="section-title">设备管理</h2>
+                <p class="section-subtitle">管理虚拟设备</p>
+                
+                <!-- 设备列表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">设备列表</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                添加设备
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-sync-alt"></i>
+                                刷新
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>名称</th>
+                                        <th>状态</th>
+                                        <th>IP地址</th>
+                                        <th>MTU</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="devices-table-body">
+                                    <!-- 设备数据将通过JavaScript动态加载 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 路由管理 -->
+            <section id="routes" class="section">
+                <h2 class="section-title">路由管理</h2>
+                <p class="section-subtitle">管理虚拟网络路由</p>
+                
+                <!-- 路由列表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">路由列表</div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                添加路由
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-sync-alt"></i>
+                                刷新
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>网络</th>
+                                        <th>子网掩码</th>
+                                        <th>网关</th>
+                                        <th>指标</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="routes-table-body">
+                                    <!-- 路由数据将通过JavaScript动态加载 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 认证管理 -->
+            <section id="auth" class="section">
+                <h2 class="section-title">认证管理</h2>
+                <p class="section-subtitle">管理用户认证</p>
+                
+                <!-- 认证信息 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">认证状态</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="auth-info">
+                            <div class="auth-item">
+                                <label>用户名</label>
+                                <span>管理员</span>
+                            </div>
+                            <div class="auth-item">
+                                <label>角色</label>
+                                <span>系统管理员</span>
+                            </div>
+                            <div class="auth-item">
+                                <label>登录时间</label>
+                                <span>2023-07-01 10:00:00</span>
+                            </div>
+                            <div class="auth-item">
+                                <label>令牌有效期</label>
+                                <span>24小时</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 系统设置 -->
+            <section id="settings" class="section">
+                <h2 class="section-title">系统设置</h2>
+                <p class="section-subtitle">配置VPNet系统</p>
+                
+                <!-- 设置表单 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">系统配置</div>
+                    </div>
+                    <div class="card-body">
+                        <form class="settings-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="server-port">服务器端口</label>
+                                    <input type="number" id="server-port" name="server-port" value="51820">
+                                </div>
+                                <div class="form-group">
+                                    <label for="mtu">默认MTU</label>
+                                    <input type="number" id="mtu" name="mtu" value="1420">
+                                </div>
+                                <div class="form-group">
+                                    <label for="heartbeat-interval">心跳间隔(秒)</label>
+                                    <input type="number" id="heartbeat-interval" name="heartbeat-interval" value="30">
+                                </div>
+                                <div class="form-group">
+                                    <label for="timeout">超时时间(秒)</label>
+                                    <input type="number" id="timeout" name="timeout" value="120">
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    保存设置
+                                </button>
+                                <button type="button" class="btn btn-secondary">
+                                    <i class="fas fa-undo"></i>
+                                    恢复默认
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 日志管理 -->
+            <section id="logs" class="section">
+                <h2 class="section-title">日志管理</h2>
+                <p class="section-subtitle">查看系统日志</p>
+                
+                <!-- 日志列表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">系统日志</div>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-sync-alt"></i>
+                                刷新
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-download"></i>
+                                导出
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="log-container" id="log-container">
+                            <!-- 日志数据将通过JavaScript动态加载 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- 模态框 -->
+    <div class="modal" id="modal">
+        <div class="modal-overlay" id="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">模态框标题</h3>
+                <button class="modal-close" id="modal-close" aria-label="关闭模态框">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- 模态框内容将通过JavaScript动态加载 -->
+            </div>
+            <div class="modal-footer" id="modal-footer">
+                <!-- 模态框按钮将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入自定义JavaScript -->
+    <script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+[package]
+name = "vpnet-web"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your@email.com>"]
+description = "VPNet Web Management Interface"
+license = "MIT"
+
+[dependencies]
+axum = "0.7"
+tower-http = { version = "0.5", features = ["cors", "compression", "serve"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+log = "0.4"
+thiserror = "1.0"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+debug = true
+opt-level = 0
